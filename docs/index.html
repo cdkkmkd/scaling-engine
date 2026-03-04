@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1分钱AI工具站 - 学生党必备</title>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 顶部导航和套餐展示 */
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        /* 用户信息和次数显示 */
+        .user-info {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .user-info span {
+            font-weight: bold;
+            color: #667eea;
+            margin: 0 5px;
+        }
+
+        /* 套餐区域 */
+        .pricing-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid #f0f0f0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .pricing-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .pricing-card h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .pricing-card .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .pricing-card .description {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .pricing-card button {
+            width: 100%;
+            padding: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .pricing-card button:hover {
+            background: #764ba2;
+        }
+
+        /* 工具区域 */
+        .tools-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .tool-card h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .tool-card textarea,
+        .tool-card input[type="text"],
+        .tool-card input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            margin-bottom: 10px;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .tool-card textarea:focus,
+        .tool-card input[type="text"]:focus,
+        .tool-card input[type="file"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .button-group button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn-generate {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-generate:hover {
+            background: #764ba2;
+        }
+
+        .btn-generate:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-copy {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-copy:hover {
+            background: #e0e0e0;
+        }
+
+        .result-area {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 6px;
+            min-height: 80px;
+            border: 1px solid #f0f0f0;
+            word-break: break-all;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .result-area.show {
+            display: block;
+        }
+
+        .result-area.loading {
+            text-align: center;
+            color: #666;
+        }
+
+        .result-area.loading::after {
+            content: '⏳ 生成中...';
+            display: block;
+        }
+
+        /* 弹窗 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        .modal-content p {
+            margin-bottom: 15px;
+            color: #666;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .qr-code-area {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .qr-code-area img {
+            max-width: 100%;
+            height: auto;
+            max-height: 300px;
+        }
+
+        .qr-code-placeholder {
+            width: 200px;
+            height: 200px;
+            background: #f0f0f0;
+            border: 2px dashed #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            margin: 0 auto;
+            color: #999;
+            font-size: 12px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .modal-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-buttons button {
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #764ba2;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        /* 付款说明 */
+        .payment-instruction {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+        }
+
+        .payment-instruction strong {
+            color: #667eea;
+        }
+
+        /* 页脚 */
+        .footer {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .footer .disclaimer {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        /* 提示信息 */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+            max-width: 300px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .pricing-section {
+                grid-template-columns: 1fr;
+            }
+
+            .tools-section {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .modal-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            body {
+                padding: 8px;
+            }
+        }
+
+        /* 加载动画 */
+        .loading-spinner {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #667eea;
+            animation: spin 1s linear infinite;
+            margin-right: 5px;
+        }
+
+        @keyframes spin {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(0.5); opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1>🚀 1分钱AI工具站</h1>
+            <p>为学生和上班族打造的平价AI工具集合</p>
+            
+            <!-- 用户信息展示 -->
+            <div class="user-info">
+                💎 您拥有：<span id="remaining-times">0</span> 次使用机会
+                <span style="margin: 0 10px;">|</span>
+                <span id="user-status">免费试用</span>
+            </div>
+
+            <!-- 套餐区域 - 可修改价格和次数 -->
+            <div class="pricing-section">
+                <!-- 套餐1：0.01元单次 -->
+                <div class="pricing-card">
+                    <h3>单次体验</h3>
+                    <div class="price">¥0.01</div>
+                    <div class="description">
+                        解锁单次任意工具使用权限<br>
+                        随用随买，灵活方便
+                    </div>
+                    <button onclick="showPaymentModal(1, 0.01, '单次体验', 1)">立即解锁</button>
+                </div>
+
+                <!-- 套餐2：0.99元100次 -->
+                <div class="pricing-card">
+                    <h3>周卡套餐</h3>
+                    <div class="price">¥0.99</div>
+                    <div class="description">
+                        解锁100次使用次数<br>
+                        7天有效期，超值推荐
+                    </div>
+                    <button onclick="showPaymentModal(2, 0.99, '周卡套餐', 100)">立即解锁</button>
+                </div>
+
+                <!-- 套餐3：9.9元永久无限 -->
+                <div class="pricing-card">
+                    <h3>永久会员</h3>
+                    <div class="price">¥9.9</div>
+                    <div class="description">
+                        全站工具永久无限使用<br>
+                        一次投资，终身受益
+                    </div>
+                    <button onclick="showPaymentModal(3, 9.9, '永久会员', 99999)">立即解锁</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 工具区域 -->
+        <div class="tools-section">
+            <!-- 工具1：AI文案生成 -->
+            <div class="tool-card">
+                <h2>✍️ AI文案生成</h2>
+                <textarea id="copywriting-input" placeholder="输入主题或关键词，AI帮您生成文案&#10;示例：学习笔记软件&#10;&#10;或直接粘贴您的品牌信息，AI进行创意改写"></textarea>
+                <div class="button-group">
+                    <button class="btn-generate" onclick="generateCopywriting()">生成文案</button>
+                    <button class="btn-copy" onclick="copyToClipboard('copywriting-result')">一键复制</button>
+                </div>
+                <div class="result-area" id="copywriting-result"></div>
+            </div>
+
+            <!-- 工具2：AI起名 -->
+            <div class="tool-card">
+                <h2>🎯 AI起名工具</h2>
+                <input type="text" id="naming-input" placeholder="输入企业/产品类型&#10;示例：教育平台、咖啡店、美妆app等">
+                <div class="button-group">
+                    <button class="btn-generate" onclick="generateNaming()">开始起名</button>
+                    <button class="btn-copy" onclick="copyToClipboard('naming-result')">一键复制</button>
+                </div>
+                <div class="result-area" id="naming-result"></div>
+            </div>
+
+            <!-- 工具3：OCR图片识别 -->
+            <div class="tool-card">
+                <h2>📸 OCR图片文字提取</h2>
+                <input type="file" id="ocr-input" accept="image/*" placeholder="选择图片">
+                <div class="button-group">
+                    <button class="btn-generate" onclick="generateOCR()">开始识别</button>
+                    <button class="btn-copy" onclick="copyToClipboard('ocr-result')">一键复制</button>
+                </div>
+                <div class="result-area" id="ocr-result"></div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <div class="footer">
+            <div class="disclaimer">
+                ⚠️ 免责声明：本站所有工具仅用于个人学习交流使用，请勿用于商业用途。如有问题请联系客服。
+            </div>
+            <div>
+                © 2024 1分钱AI工具站 | 让AI成为你的学习助手
+            </div>
+        </div>
+    </div>
+
+    <!-- 付费弹窗 -->
+    <div class="modal" id="payment-modal">
+        <div class="modal-content">
+            <h2 id="modal-title">解锁工具</h2>
+            
+            <p>您即将购买：<strong id="modal-package"></strong></p>
+            
+            <div class="payment-instruction">
+                <strong>📋 付款步骤：</strong><br>
+                1. 使用支付宝/微信扫描下方二维码<br>
+                2. 支付对应金额<br>
+                3. 支付成功后点击"已付款，解锁次数"按钮<br>
+                4. 次数立即到账，即可使用工具
+            </div>
+
+            <div class="qr-code-area">
+                <!-- 【收款码替换】用户已付款收款码 -->
+                <img src="mm_facetoface_collect_qrcode_1772290224343.png" alt="收款码" onerror="this.parentElement.innerHTML='<div class=\"qr-code-placeholder\">收款码加载失败<br>请确保图片文件在同一目录</div>'">
+            </div>
+
+            <p style="text-align: center; color: #999; font-size: 12px;">
+                金额: <strong id="modal-amount">¥0.01</strong>
+            </p>
+
+            <div class="modal-buttons">
+                <button class="btn-primary" onclick="confirmPayment()">已付款，解锁次数</button>
+                <button class="btn-secondary" onclick="closePaymentModal()">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 权限提示弹窗 -->
+    <div class="modal" id="no-access-modal">
+        <div class="modal-content">
+            <h2>🔒 次数不足</h2>
+            <p>您的使用次数已用尽，请购买套餐或单次使用权限。</p>
+            <p style="text-align: center; color: #667eea; font-size: 16px; font-weight: bold; margin: 20px 0;">
+                现在解锁，立即使用 ↑
+            </p>
+            <p style="color: #999; font-size: 12px;">
+                💡 提示：我们提供超平价的套餐，周卡仅需0.99元，每次不到1分钱！
+            </p>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn-primary" onclick="closeAccessModal()">我知道了，去购买</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 付费提示弹窗 -->
+    <div class="modal" id="payment-required-modal">
+        <div class="modal-content">
+            <h2>⭐ 使用工具需要次数</h2>
+            <p>每使用一次工具将消耗1次使用机会。</p>
+            <p style="margin: 20px 0;">
+                <strong>我们的活动价格：</strong><br>
+                ✨ 0.01元：1次任意工具<br>
+                ✨ 0.99元：100次（周卡）<br>
+                ✨ 9.9元：永久无限次
+            </p>
+            <p style="color: #999; font-size: 12px;">
+                📱 支持支付宝、微信支付，安全快速
+            </p>
+            <div class="modal-buttons">
+                <button class="btn-primary" onclick="closePaymentRequiredModal()">去购买套餐</button>
+                <button class="btn-secondary" onclick="closePaymentRequiredModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // 配置部分 - 新手可直接修改
+        // ============================================
+
+        // 【本地数据存储】使用浏览器localStorage，关闭重开也不会丢失
+        const STORAGE_KEY = 'ai_tool_stats';
+        const VIPUNTIL_KEY = 'vip_until_time';
+
+        // 【AI文案生成】- 模板库（可自定义添加更多模板）
+        const COPYWRITING_TEMPLATES = [
+            {
+                keyword: '教育|学习|课程',
+                templates: [
+                    '掌握{keyword}的核心技能，让你的竞争力飙升！',
+                    '专业的{keyword}体系，适合所有学习阶段',
+                    '从入门到精通{keyword}，只需{keyword}',
+                    '高效学习{keyword}，事半功倍的秘诀在这里',
+                    '解锁{keyword}新技能，开启人生新可能'
+                ]
+            },
+            {
+                keyword: '健身|运动|健康',
+                templates: [
+                    '告别懒散，开启{keyword}新生活',
+                    '{keyword}不止，坚持改变人生',
+                    '科学{keyword}计划，让你看到真实效果',
+                    '每天30分钟{keyword}，轻松塑造完美身材',
+                    '{keyword}从心开始，健康伴随一生'
+                ]
+            },
+            {
+                keyword: '美妆|护肤|化妆',
+                templates: [
+                    '专业{keyword}技巧，打造无瑕肌肤',
+                    '{keyword}不复杂，跟我学5分钟变美女',
+                    '口碑爆款{keyword}产品，让你闪闪发光',
+                    '科学{keyword}方案，拯救你的皮肤',
+                    '每一个女生都值得精致，从{keyword}开始'
+                ]
+            },
+            {
+                keyword: '科技|软件|app',
+                templates: [
+                    '革新{keyword}体验，让生活更智能',
+                    '下载{keyword}，体验未来科技',
+                    '{keyword}赋能你的日常，效率提升10倍',
+                    '最新{keyword}功能，让你领先同龄人',
+                    '安装{keyword}，开启科技新时代'
+                ]
+            },
+            {
+                keyword: '美食|餐饮|外卖',
+                templates: [
+                    '品尝{keyword}的美味，享受生活的滋味',
+                    '{keyword}新上市，不尝试真的亏大了',
+                    '最地道的{keyword}，让味蕾舞动',
+                    '馋了吗？来份{keyword}，治愈你的胃',
+                    '{keyword}精选，每一口都是幸福'
+                ]
+            }
+        ];
+
+        // 【AI起名】- 名字库（可自定义添加）
+        const NAMING_DATABASE = {
+            '教育|课程|培训|学习': {
+                prefixes: ['学', '易', '智', '思', '云', '聪'],
+                cores: ['思', '脑', '道', '堂', '坊', '家'],
+                suffixes: ['汇', '库', '网', '宝', '圈', '云'],
+                examples: ['学思网', '易智汇', '云脑堂', '思学圈', '聪学宝']
+            },
+            '商务|企业|办公': {
+                prefixes: ['云', '企', '融', '商', '智', '通'],
+                cores: ['云', '通', '邦', '达', '力', '行'],
+                suffixes: ['云', '宝', '通', '邦', '家', '平台'],
+                examples: ['云通邦', '企融宝', '智商云', '通达家', '商力平台']
+            },
+            '美妆|护肤|化妆': {
+                prefixes: ['美', '颜', '肌', '净', '光', '雅'],
+                cores: ['颜', '肌', '光', '品', '采', '雪'],
+                suffixes: ['坊', '阁', '轩', '美', '颜', '舍'],
+                examples: ['美颜坊', '光肌阁', '颜采轩', '净颜美', '雅美舍']
+            },
+            '餐饮|美食|咖啡': {
+                prefixes: ['品', '尝', '食', '鲜', '香', '美'],
+                cores: ['味', '食', '香', '品', '鲜', '胃'],
+                suffixes: ['坊', '楼', '点', '馆', '居', '轩'],
+                examples: ['品味坊', '尝香楼', '美食点', '鲜品馆', '香鲜居']
+            },
+            '科技|软件|互联网': {
+                prefixes: ['云', '智', '数', '新', '尚', '互'],
+                cores: ['云', '链', '程', '网', '智', '码'],
+                suffixes: ['云', '网', '链', '圈', '客', '吧'],
+                examples: ['云智网', '数码云', '智链客', '新程圈', '尚网吧']
+            }
+        };
+
+        // ============================================
+        // 核心功能上层逻辑
+        // ============================================
+
+        // 初始化应用
+        function initApp() {
+            loadUserData();
+            updateUserInfo();
+        }
+
+        // 从localStorage加载用户数据
+        function loadUserData() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (!stored) {
+                // 初始化新用户
+                const initialData = {
+                    totalTimes: 0,
+                    usedTimes: 0,
+                    createdAt: new Date().toISOString(),
+                    vipStatus: false,
+                    vipUntil: null
+                };
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(initialData));
+            }
+        }
+
+        // 获取用户当前调用次数
+        function getRemainingTimes() {
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+            
+            // 检查VIP是否过期
+            if (data.vipStatus && data.vipUntil) {
+                const now = new Date().getTime();
+                const vipUntil = new Date(data.vipUntil).getTime();
+                if (now > vipUntil) {
+                    data.vipStatus = false;
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                }
+            }
+
+            // VIP用户返回无限次数
+            if (data.vipStatus) {
+                return 99999;
+            }
+            
+            return data.totalTimes - data.usedTimes;
+        }
+
+        // 检查用户权限（核心逻辑：无次数时弹出付费引导；有次数时正常使用）
+        function checkAndDeductTimes(toolName) {
+            const remaining = getRemainingTimes();
+            
+            if (remaining <= 0) {
+                // 无次数：显示付费引导
+                showPaymentRequiredModal();
+                return false;
+            }
+            
+            // 有次数：扣除1次
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+            
+            // VIP用户不扣次数
+            if (!data.vipStatus) {
+                data.usedTimes += 1;
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            }
+            
+            updateUserInfo();
+            return true;
+        }
+
+        // 更新用户信息显示
+        function updateUserInfo() {
+            const remaining = getRemainingTimes();
+            document.getElementById('remaining-times').textContent = remaining == 99999 ? '无限' : remaining;
+            
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+            let status = '免费试用';
+            if (data.vipStatus) {
+                status = `🌟 VIP会员${data.vipUntil ? ' (至 ' + new Date(data.vipUntil).toLocaleDateString() + ')' : ''}`;
+            } else if (data.totalTimes > 0) {
+                status = `💰 已购买用户 (共${data.totalTimes}次)`;
+            }
+            document.getElementById('user-status').textContent = status;
+        }
+
+        // ============================================
+        // 支付系统
+        // ============================================
+
+        let currentPayment = null; // 保存当前支付信息
+
+        // 显示支付弹窗
+        function showPaymentModal(packageId, amount, packageName, times) {
+            currentPayment = {
+                packageId,
+                amount,
+                packageName,
+                times,
+                unlockedAt: new Date().toISOString()
+            };
+
+            document.getElementById('modal-title').textContent = '解锁工具';
+            document.getElementById('modal-package').textContent = packageName;
+            document.getElementById('modal-amount').textContent = '¥' + amount.toFixed(2);
+            document.getElementById('payment-modal').classList.add('show');
+        }
+
+        // 关闭支付弹窗
+        function closePaymentModal() {
+            document.getElementById('payment-modal').classList.remove('show');
+            currentPayment = null;
+        }
+
+        // 确认支付（实际上是"已付款，解锁次数"按钮）
+        function confirmPayment() {
+            if (!currentPayment) return;
+
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+
+            if (currentPayment.packageId === 3) {
+                // 永久VIP
+                data.vipStatus = true;
+                data.vipUntil = null; // 无期限
+            } else {
+                // 增加次数
+                data.totalTimes += currentPayment.times;
+
+                // 如果是周卡（packageId === 2），设置7天过期
+                if (currentPayment.packageId === 2) {
+                    const sevenDaysLater = new Date();
+                    sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
+                    data.vipStatus = true;
+                    data.vipUntil = sevenDaysLater.toISOString();
+                }
+            }
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            updateUserInfo();
+            closePaymentModal();
+            showToast(`✅ 恭喜！您已成功解锁 ${currentPayment.times} 次使用机会`);
+        }
+
+        // ============================================
+        // 三大工具实现
+        // ============================================
+
+        // 工具1：AI文案生成
+        function generateCopywriting() {
+            if (!checkAndDeductTimes('文案生成')) return;
+
+            const input = document.getElementById('copywriting-input').value.trim();
+            if (!input) {
+                showToast('请输入主题或关键词');
+                return;
+            }
+
+            const resultArea = document.getElementById('copywriting-result');
+            resultArea.classList.add('show', 'loading');
+
+            // 模拟延迟生成
+            setTimeout(() => {
+                const templates = COPYWRITING_TEMPLATES.find(t => {
+                    const keywords = t.keyword.split('|');
+                    return keywords.some(k => input.includes(k));
+                }) || COPYWRITING_TEMPLATES[0];
+
+                const randomTemplate = templates.templates[Math.floor(Math.random() * templates.templates.length)];
+                const result = randomTemplate.replace('{keyword}', input);
+
+                resultArea.classList.remove('loading');
+                resultArea.textContent = result;
+                showToast('✨ 文案生成成功，点击"一键复制"复制结果');
+            }, 800);
+        }
+
+        // 工具2：AI起名
+        function generateNaming() {
+            if (!checkAndDeductTimes('起名工具')) return;
+
+            const input = document.getElementById('naming-input').value.trim();
+            if (!input) {
+                showToast('请输入企业/产品类型');
+                return;
+            }
+
+            const resultArea = document.getElementById('naming-result');
+            resultArea.classList.add('show', 'loading');
+
+            setTimeout(() => {
+                let results = [];
+                
+                // 查找匹配的行业库
+                for (const [industry, data] of Object.entries(NAMING_DATABASE)) {
+                    if (industry.split('|').some(k => input.includes(k))) {
+                        results = data.examples;
+                        break;
+                    }
+                }
+
+                // 如果没有找到，使用通用起名
+                if (results.length === 0) {
+                    const prefixes = ['云', '易', '智', '新', '尚'];
+                    const cores = ['云', '脑', '思', '程', '网'];
+                    const suffixes = ['云', '通', '网', '宝', '家'];
+                    
+                    for (let i = 0; i < 5; i++) {
+                        const name = prefixes[i] + cores[i] + suffixes[i];
+                        results.push(name);
+                    }
+                }
+
+                resultArea.classList.remove('loading');
+                resultArea.textContent = results.join('\n');
+                showToast('✨ 起名完成，选择喜欢的名字');
+            }, 800);
+        }
+
+        // 工具3：OCR图片识别（使用免费的tesseract.js）
+        async function generateOCR() {
+            if (!checkAndDeductTimes('OCR识别')) return;
+
+            const input = document.getElementById('ocr-input');
+            if (!input.files || input.files.length === 0) {
+                showToast('请选择图片文件');
+                return;
+            }
+
+            const file = input.files[0];
+            const resultArea = document.getElementById('ocr-result');
+            resultArea.classList.add('show', 'loading');
+
+            try {
+                const imageUrl = URL.createObjectURL(file);
+                
+                // 使用tesseract.js进行图片识别
+                const { data: { text } } = await Tesseract.recognize(
+                    imageUrl,
+                    'chi_sim+eng', // 中文+英文
+                    {
+                        logger: m => {
+                            // 识别进度
+                            if (m.status === 'recognizing') {
+                                resultArea.textContent = `识别进度: ${(m.progress * 100).toFixed(0)}%`;
+                            }
+                        }
+                    }
+                );
+
+                resultArea.classList.remove('loading');
+                resultArea.textContent = text || '未识别到文字，请尝试更清晰的图片';
+                showToast('✨ 文字识别完成');
+                
+                URL.revokeObjectURL(imageUrl);
+            } catch (error) {
+                resultArea.classList.remove('loading');
+                resultArea.textContent = '识别失败，请确保图片清晰，重试一次';
+                showToast('⚠️ 识别出错，请重试');
+            }
+        }
+
+        // ============================================
+        // 弹窗管理
+        // ============================================
+
+        function showPaymentRequiredModal() {
+            document.getElementById('payment-required-modal').classList.add('show');
+        }
+
+        function closePaymentRequiredModal() {
+            document.getElementById('payment-required-modal').classList.remove('show');
+        }
+
+        function closeAccessModal() {
+            document.getElementById('no-access-modal').classList.remove('show');
+        }
+
+        // ============================================
+        // 复制功能
+        // ============================================
+
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            if (!element.textContent) {
+                showToast('没有内容可复制');
+                return;
+            }
+
+            const text = element.textContent;
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('✅ 已复制到剪贴板');
+                });
+            } else {
+                // 备选方案（低版本浏览器）
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('✅ 已复制到剪贴板');
+            }
+        }
+
+        // ============================================
+        // 工具函数
+        // ============================================
+
+        // 显示通知提示
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        // 页面加载完成后初始化
+        window.addEventListener('load', initApp);
+
+        // 关闭弹窗时的快捷方式
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closePaymentModal();
+                closePaymentRequiredModal();
+                closeAccessModal();
+            }
+        });
+
+        // 点击弹窗外部关闭
+        document.getElementById('payment-modal')?.addEventListener('click', (e) => {
+            if (e.target.id === 'payment-modal') closePaymentModal();
+        });
+
+        document.getElementById('no-access-modal')?.addEventListener('click', (e) => {
+            if (e.target.id === 'no-access-modal') closeAccessModal();
+        });
+
+        document.getElementById('payment-required-modal')?.addEventListener('click', (e) => {
+            if (e.target.id === 'payment-required-modal') closePaymentRequiredModal();
+        });
+    </script>
+</body>
+</html>
